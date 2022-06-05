@@ -1,5 +1,7 @@
-from ninja import NinjaAPI, Schema, Path
+from ninja import NinjaAPI, Schema, Path, ModelSchema
 import datetime
+
+from blog.models import Author
 
 api = NinjaAPI()
 
@@ -42,3 +44,17 @@ class PathDate(Schema):
 @api.get('/events/{year}/{month}/{day}/')
 def events(request, date: PathDate = Path(...)):
     return {'date': date.value()}
+
+
+class AuthorSchema(ModelSchema):
+    class Config:
+        model = Author
+        model_fields = ['first_name']
+
+
+@api.get('/blog/authors/')
+def authors_list(request, data: AuthorSchema = Path(...)):
+    print(f"Działa dupa development: {data}")
+    return "OK"
+
+# @api.get('blog/posts/')
